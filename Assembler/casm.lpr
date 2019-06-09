@@ -120,7 +120,7 @@ begin
     else if op = 'bootstrap' then
     begin
       addr:=3;
-      start:='3';
+      start:='SET';
       writeCards(['002','800']);
       pc:=3;
     end
@@ -145,6 +145,11 @@ begin
         writeCards([RightStr('000'+param2,3)]);
       until param = '';
     end
+    else if op = 'rts' then
+    begin
+      writeAddr;
+      writeCards(['899']);
+    end
     else if op = 'end' then
       final:=True;
     opcode:=op_map.IndexOf(op);
@@ -157,7 +162,7 @@ begin
         if param[1] = '$' then
           param:='*'+RightStr(param, Length(param)-1);
       end;
-      if pc = StrToInt(start) then
+      if start = 'SET' then
         start:=IntToStr(opcode)+param
       else
       begin

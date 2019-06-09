@@ -213,8 +213,10 @@ end;
 
 function TCardiacForm.GetMemory(addr: Byte): string;
 begin
+  Result:='000';
   if addr > 99 then
     Exit;
+  Memory[addr].Color:=$ffffaa;
   Result:=Memory[addr].Text;
 end;
 
@@ -233,6 +235,7 @@ procedure TCardiacForm.SetMemory(addr: Byte; value: String);
 begin
   if addr > 99 then
     Exit;
+  Memory[addr].Color:=$aaffff;
   Memory[addr].Text:=value;
 end;
 
@@ -256,16 +259,17 @@ begin
     4: begin
       x:=floor(data div 10);
       y:=data mod 10;
-      for i:=0 to x-1 do
+      for i:=0 to x do
         Acc:=(Acc * 10) mod 10000;
-      for i:=0 to y-1 do
+      for i:=0 to y do
         Acc:=floor(Acc div 10);
     end;
     5: Output.Items.Add(GetMemory(data));
     6: SetMemory(data, Acc);
     7: Dec(Acc, GetMemoryInt(data));
     8: begin
-      SetMemory(99, PC+800);
+      if data <> 99 then
+        SetMemory(99, PC+800); // Checking if data <> 99 is not standard.
       PC:=data;
     end;
     9: ResetMemory;
@@ -274,6 +278,8 @@ end;
 
 procedure TCardiacForm.SetPC(const value: Byte);
 begin
+  if value > 99 then
+    Exit;
   Memory[FPC].Color:=$FFFFFF;
   FPC:=value;
   Memory[FPC].Color:=$99FFCC;
