@@ -9,3 +9,5 @@ still work and process data in a similar manner, just with many many more op cod
 Here is the full source code for the Cardiac Computer Simulator.
 
 [kDocs page](http://tech406.com/kdocs/cardiac.xml)
+
+[Windows binary](http://tech406.com/kdocs/Cardiac.zip)
