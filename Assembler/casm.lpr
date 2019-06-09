@@ -136,18 +136,26 @@ begin
       writeCards(['002','889']);
       pc:=1;
     end
+    else if op = 'data' then
+    begin
+      param:=getToken(line);
+      repeat
+        param2:=Copy2SymbDel(param, ',');
+        writeAddr;
+        writeCards([RightStr('000'+param2,3)]);
+      until param = '';
+    end
     else if op = 'end' then
       final:=True;
     opcode:=op_map.IndexOf(op);
     if opcode > -1 then
     begin
+      param:='00';
       if line <> '' then
       begin
         param:=getToken(line);
         if param[1] = '$' then
-          param:='*'+RightStr(param, Length(param)-1)
-        else
-          param:='000'+param
+          param:='*'+RightStr(param, Length(param)-1);
       end;
       if pc = StrToInt(start) then
         start:=IntToStr(opcode)+param
@@ -191,6 +199,8 @@ begin
       else
         if Length(op) = 1 then
           ofile.Add(op+'00')
+        else if Length(op) = 2 then
+          ofile.Add(op[1]+'0'+op[2])
         else
           ofile.Add(RightStr('000'+op,3));
     end;

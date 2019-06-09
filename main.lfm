@@ -3,6 +3,7 @@ object CardiacForm: TCardiacForm
   Height = 486
   Top = 193
   Width = 949
+  BorderStyle = bsSingle
   Caption = 'Cardiac Simulator'
   ClientHeight = 486
   ClientWidth = 949
@@ -782,5 +783,28 @@ object CardiacForm: TCardiacForm
     Width = 94
     Caption = 'Max Speed'
     TabOrder = 7
+  end
+  object ResetButton: TButton
+    Left = 832
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Reset'
+    OnClick = ResetButtonClick
+    TabOrder = 8
+  end
+  object AsciiButton: TButton
+    Left = 832
+    Height = 25
+    Top = 72
+    Width = 75
+    Caption = 'ASCII'
+    OnClick = AsciiButtonClick
+    TabOrder = 9
+  end
+  object OpenDialog: TOpenDialog
+    Title = 'Load Cardiac Deck'
+    left = 25
+    top = 19
   end
 end

@@ -12,6 +12,9 @@ type
   { TCardiacForm }
 
   TCardiacForm = class(TForm)
+    AsciiButton: TButton;
+    OpenDialog: TOpenDialog;
+    ResetButton: TButton;
     MaxSpeed: TCheckBox;
     Label3: TLabel;
     Output: TListBox;
@@ -24,8 +27,10 @@ type
     Reader: TListBox;
     Deck: TMemo;
     MemoryGroup: TGroupBox;
+    procedure AsciiButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LoadDeckClick(Sender: TObject);
+    procedure ResetButtonClick(Sender: TObject);
     procedure RunCardiacClick(Sender: TObject);
     procedure StepCardiacClick(Sender: TObject);
   private
@@ -42,9 +47,8 @@ type
     procedure SetMemory(addr: Byte; value: String);
     procedure ProcessOp;
     procedure SetPC(const value: Byte);
+    procedure AddString(const s: string);
     property PC: Byte read FPC write SetPC;
-  public
-
   end;
 
 var
@@ -65,11 +69,37 @@ begin
   Deck.Text:='';
 end;
 
+procedure TCardiacForm.AsciiButtonClick(Sender: TObject);
+var
+  s: String;
+  i,c: Integer;
+begin
+  if Output.Items.Count = 0 then
+  begin
+    ShowMessage('No Output to display as ASCII!');
+    Exit;
+  end;
+  s:='';
+  for i:=0 to Output.Items.Count-1 do
+  begin
+    c:=StrToInt(Output.items.Strings[i]);
+    if c < 128 then
+      s:=s+chr(c);
+  end;
+  ShowMessage('ASCII of Output: '+s);
+end;
+
 procedure TCardiacForm.LoadDeckClick(Sender: TObject);
 var
   i, bc: Integer;
   line: String;
 begin
+  if Deck.Lines.Text = '' then
+  begin
+    if OpenDialog.Execute = False then
+      Exit;
+    Deck.Lines.LoadFromFile(OpenDialog.FileName);
+  end;
   Reader.Items.Clear;
   for i:=0 to Deck.Lines.Count-1 do
   begin
@@ -90,19 +120,33 @@ begin
   end;
 end;
 
+procedure TCardiacForm.ResetButtonClick(Sender: TObject);
+begin
+  ResetMemory;
+end;
+
 procedure TCardiacForm.RunCardiacClick(Sender: TObject);
 begin
+  if Running = True then
+  begin
+    Running:=False;
+    Exit;
+  end;
+  RunCardiac.Caption:='Stop';
+  StepCardiac.Enabled:=False;
   Output.Items.Clear;
   PC:=0;
   Running:=True;
   repeat
     ProcessOp;
-    Refresh;
+    Application.ProcessMessages;
     if MaxSpeed.Checked = False then
       Sleep(100);
     if PC > 99 then
       Running:=False;
   until Running = False;
+  RunCardiac.Caption:='Run';
+  StepCardiac.Enabled:=True;
 end;
 
 procedure TCardiacForm.StepCardiacClick(Sender: TObject);
@@ -127,6 +171,8 @@ begin
     Memory[i].ReadOnly:=True;
     Memory[i].Text:='';
     Memory[i].MaxLength:=3;
+    Memory[i].Hint:=IntToStr(i);
+    Memory[i].ShowHint:=True;
     Memory[i].Parent:=MemoryGroup;
     row:=row+25;
     if row > (25*10) then
@@ -146,11 +192,20 @@ begin
 end;
 
 function TCardiacForm.GetInput: string;
+var
+  tmp: Integer;
 begin
   if Reader.Count = 0 then
   begin
-    Result:=InputBox('Cardiac Manual Input','Please enter a number?','');
-    Exit;
+    repeat
+      Result:=InputBox('Cardiac Manual Input','Please enter a number or string?','');
+    until Result <> '';
+    if TryStrToInt(Result, tmp) = True then
+    begin
+      Result:=RightStr('000'+Result,3);
+      Exit;
+    end;
+    AddString(Result);
   end;
   Result:=Reader.Items.Strings[0];
   Reader.Items.Text:=RightStr(Reader.Items.Text, Length(Reader.Items.Text)-4);
@@ -213,7 +268,7 @@ begin
       SetMemory(99, PC+800);
       PC:=data;
     end;
-    9: Running:=False;
+    9: ResetMemory;
   end;
 end;
 
@@ -222,6 +277,18 @@ begin
   Memory[FPC].Color:=$FFFFFF;
   FPC:=value;
   Memory[FPC].Color:=$99FFCC;
+end;
+
+procedure TCardiacForm.AddString(const s: string);
+var
+  i: Integer;
+  c: string;
+begin
+  for i:=1 to Length(s) do
+  begin
+    c:='000'+IntToStr(ord(s[i]));
+    Reader.Items.Add(RightStr(c,3));
+  end;
 end;
 
 end.
