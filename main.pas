@@ -13,6 +13,10 @@ type
 
   TCardiacForm = class(TForm)
     AsciiButton: TButton;
+    StopOnEmpty: TCheckBox;
+    ClearButton: TButton;
+    Accumulator: TEdit;
+    Label4: TLabel;
     OpenDialog: TOpenDialog;
     ResetButton: TButton;
     MaxSpeed: TCheckBox;
@@ -28,6 +32,7 @@ type
     Deck: TMemo;
     MemoryGroup: TGroupBox;
     procedure AsciiButtonClick(Sender: TObject);
+    procedure ClearButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LoadDeckClick(Sender: TObject);
     procedure ResetButtonClick(Sender: TObject);
@@ -89,6 +94,15 @@ begin
   ShowMessage('ASCII of Output: '+s);
 end;
 
+procedure TCardiacForm.ClearButtonClick(Sender: TObject);
+var
+  i: Byte;
+begin
+  ResetMemory;
+  for i:=1 to 98 do
+    Memory[i].Text:='';
+end;
+
 procedure TCardiacForm.LoadDeckClick(Sender: TObject);
 var
   i, bc: Integer;
@@ -135,7 +149,6 @@ begin
   RunCardiac.Caption:='Stop';
   StepCardiac.Enabled:=False;
   Output.Items.Clear;
-  PC:=0;
   Running:=True;
   repeat
     ProcessOp;
@@ -203,12 +216,16 @@ begin
     if TryStrToInt(Result, tmp) = True then
     begin
       Result:=RightStr('000'+Result,3);
+      StopOnEmpty.Checked:=False;
       Exit;
     end;
     AddString(Result);
   end;
   Result:=Reader.Items.Strings[0];
   Reader.Items.Text:=RightStr(Reader.Items.Text, Length(Reader.Items.Text)-4);
+  if StopOnEmpty.Checked then
+    if Reader.Count = 0 then
+      Running:=False;
 end;
 
 function TCardiacForm.GetMemory(addr: Byte): string;
@@ -274,6 +291,7 @@ begin
     end;
     9: ResetMemory;
   end;
+  Accumulator.Text:=IntToStr(Acc);
 end;
 
 procedure TCardiacForm.SetPC(const value: Byte);

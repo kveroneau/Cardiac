@@ -1,17 +1,18 @@
 object CardiacForm: TCardiacForm
-  Left = 351
-  Height = 486
-  Top = 193
-  Width = 949
+  Left = 512
+  Height = 476
+  Top = 194
+  Width = 929
   BorderStyle = bsSingle
   Caption = 'Cardiac Simulator'
-  ClientHeight = 486
-  ClientWidth = 949
+  ClientHeight = 476
+  ClientWidth = 929
   Color = 10078400
+  DesignTimePPI = 94
   OnCreate = FormCreate
-  LCLVersion = '2.0.0.4'
+  LCLVersion = '2.0.12.0'
   object CardiacLogo: TImage
-    Left = 221
+    Left = 216
     Height = 121
     Top = 0
     Width = 514
@@ -687,26 +688,29 @@ object CardiacForm: TCardiacForm
   end
   object MemoryGroup: TGroupBox
     Left = 16
-    Height = 304
-    Top = 136
-    Width = 688
+    Height = 298
+    Top = 133
+    Width = 674
     Caption = 'Memory'
+    ParentFont = False
     TabOrder = 0
   end
   object Deck: TMemo
-    Left = 712
-    Height = 282
-    Top = 160
-    Width = 64
+    Left = 697
+    Height = 276
+    Top = 157
+    Width = 63
     Lines.Strings = (
       'Deck'
     )
+    ParentFont = False
+    ScrollBars = ssAutoVertical
     TabOrder = 1
   end
   object Label1: TLabel
-    Left = 728
+    Left = 713
     Height = 18
-    Top = 136
+    Top = 133
     Width = 33
     Caption = 'Deck'
     Font.Style = [fsBold]
@@ -714,17 +718,20 @@ object CardiacForm: TCardiacForm
     ParentFont = False
   end
   object Reader: TListBox
-    Left = 808
-    Height = 280
-    Top = 160
-    Width = 60
+    Left = 791
+    Height = 274
+    Top = 157
+    Width = 59
     ItemHeight = 0
+    ParentFont = False
+    ScrollWidth = 57
     TabOrder = 2
+    TopIndex = -1
   end
   object Label2: TLabel
-    Left = 816
+    Left = 799
     Height = 18
-    Top = 136
+    Top = 133
     Width = 47
     Caption = 'Reader'
     Font.Style = [fsBold]
@@ -732,44 +739,50 @@ object CardiacForm: TCardiacForm
     ParentFont = False
   end
   object LoadDeck: TButton
-    Left = 744
-    Height = 25
+    Left = 728
+    Height = 24
     Top = 8
-    Width = 75
+    Width = 73
     Caption = 'Load'
     OnClick = LoadDeckClick
+    ParentFont = False
     TabOrder = 3
   end
   object RunCardiac: TButton
-    Left = 744
-    Height = 25
-    Top = 40
-    Width = 75
+    Left = 728
+    Height = 24
+    Top = 39
+    Width = 73
     Caption = 'Run'
     OnClick = RunCardiacClick
+    ParentFont = False
     TabOrder = 4
   end
   object StepCardiac: TButton
-    Left = 744
-    Height = 25
-    Top = 72
-    Width = 75
+    Left = 728
+    Height = 24
+    Top = 70
+    Width = 73
     Caption = 'Step'
     OnClick = StepCardiacClick
+    ParentFont = False
     TabOrder = 5
   end
   object Output: TListBox
-    Left = 880
-    Height = 280
-    Top = 160
-    Width = 56
+    Left = 862
+    Height = 274
+    Top = 157
+    Width = 55
     ItemHeight = 0
+    ParentFont = False
+    ScrollWidth = 53
     TabOrder = 6
+    TopIndex = -1
   end
   object Label3: TLabel
-    Left = 888
+    Left = 870
     Height = 18
-    Top = 136
+    Top = 133
     Width = 48
     Caption = 'Output'
     Font.Style = [fsBold]
@@ -777,34 +790,69 @@ object CardiacForm: TCardiacForm
     ParentFont = False
   end
   object MaxSpeed: TCheckBox
-    Left = 832
-    Height = 22
-    Top = 40
-    Width = 94
+    Left = 815
+    Height = 21
+    Top = 39
+    Width = 90
     Caption = 'Max Speed'
+    ParentFont = False
     TabOrder = 7
   end
   object ResetButton: TButton
-    Left = 832
-    Height = 25
+    Left = 815
+    Height = 24
     Top = 8
-    Width = 75
+    Width = 73
     Caption = 'Reset'
     OnClick = ResetButtonClick
+    ParentFont = False
     TabOrder = 8
   end
   object AsciiButton: TButton
-    Left = 832
-    Height = 25
-    Top = 72
-    Width = 75
+    Left = 815
+    Height = 24
+    Top = 70
+    Width = 73
     Caption = 'ASCII'
     OnClick = AsciiButtonClick
+    ParentFont = False
     TabOrder = 9
+  end
+  object ClearButton: TButton
+    Left = 8
+    Height = 24
+    Top = 8
+    Width = 96
+    Caption = 'Clear Memory'
+    OnClick = ClearButtonClick
+    TabOrder = 10
+  end
+  object Label4: TLabel
+    Left = 16
+    Height = 18
+    Top = 97
+    Width = 80
+    Caption = 'Accumulator:'
+    ParentColor = False
+  end
+  object Accumulator: TEdit
+    Left = 104
+    Height = 30
+    Top = 88
+    Width = 40
+    TabOrder = 11
+  end
+  object StopOnEmpty: TCheckBox
+    Left = 736
+    Height = 21
+    Top = 100
+    Width = 175
+    Caption = 'Stop when Reader empty'
+    TabOrder = 12
   end
   object OpenDialog: TOpenDialog
     Title = 'Load Cardiac Deck'
-    left = 25
-    top = 19
+    Left = 112
+    Top = 24
   end
 end
